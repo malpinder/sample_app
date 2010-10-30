@@ -2,22 +2,25 @@ require 'spec_helper'
 
 describe "LayoutLinks" do
 
-  it "should have a Home page at '/'" do
-    get '/'
-    response.should have_selector('title', :content => 'Home')
-  end
+  pages = {}
+  pages[:home] =    { :linkname => '',        :path => 'root_path',     :title => 'Home' }
+  pages[:about] =   { :linkname => 'about',   :path => 'about_path',    :title => 'About' }
+  pages[:contact] = { :linkname => 'contact', :path => 'contact_path',  :title => 'Contact' }
+  pages[:help] =    { :linkname => 'help',    :path => 'help_path',     :title => 'Help' }
+  pages[:signup] =  { :linkname => 'signup',  :path => 'signup_path',   :title => 'Sign up' }
 
-  it "should have a Sign up page at '/signup'" do
-    get '/signup'
-    response.should have_selector('title', :content => 'Sign up')
-  end
+  # pages[:signin] =  { :linkname => 'signin',  :path => 'signin_path',   :title => 'Sign in' }
 
-  pages = %w(about contact help)
+  pages.each do |pagename, page|
+    it "should have a #{page[:title]} page" do
+      get '/' + page[:linkname]
+      response.should have_selector('title', :content => page[:title])
+    end
 
-  pages.each do |page|
-    it "should have a #{page.capitalize} page at /#{page}" do
-      get '/' + page
-      response.should have_selector('title', :content => page.capitalize)
+    it "should have the correct links" do
+      visit root_path
+      click_link page[:title]
+      response.should have_selector('title', :content => page[:title])
     end
   end
 
