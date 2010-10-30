@@ -3,10 +3,11 @@ require 'spec_helper'
 describe PagesController do
   render_views
 
-  before(:each) do
-    @base_title = "RoR Tut App | "
-  end
+#  before(:each) do
+#    @base_title = "RoR Tut App | "
+#  end
 
+  base_title = "RoR Tut App | "
   pages = %w(home help about contact)
 
   pages.each do |page|
@@ -17,7 +18,7 @@ describe PagesController do
       end
       it "should have the right title" do
         get page
-        response.should have_selector("title", :content => @base_title + page.capitalize)
+        response.should have_selector("title", :content => base_title + page.capitalize)
       end
     end
   end

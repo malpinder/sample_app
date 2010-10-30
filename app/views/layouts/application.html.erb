@@ -1,12 +1,19 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>RoR Tut App | <%= @title %></title>
+    <title><%= title %></title>
     <%= csrf_meta_tag %>
+    <%= render :partial => "layouts/stylesheets" %>
   </head>
   <body>
-    <h2><%= @title %></h2>
-    <%= yield %>
+    <div class='container'>
+      <%= render :partial => "layouts/header" %>
+      <section class='round'>
+        <h2><%= @title %></h2>
+        <%= yield %>
+      </section>
+      <%= render :partial => "layouts/footer" %>
+    </div>
   </body>
 </html>
 
