@@ -12,6 +12,7 @@
         <h2><%= @title %></h2>
         <%= yield %>
       </section>
+      <%= render :partial => "layouts/footer" %>
     </div>
   </body>
 </html>

@@ -31,6 +31,7 @@ gem 'mysql2'
 
 group :development do
   gem 'rspec-rails', '2.0.1'
+  gem 'annotate-models'
 end
 
 group :test do
