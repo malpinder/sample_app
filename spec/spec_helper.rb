@@ -2,12 +2,26 @@
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
+require 'webrat'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 
+#include Webrat::Methods
+#include Webrat::Matchers
+
+Webrat.configure do |config|
+  config.mode = :rack
+  config.open_error_files = false # prevents webrat from opening the browser
+end
+
 RSpec.configure do |config|
+
+  def test_sign_in(user)
+    controller.sign_in(user)
+  end
+
   # == Mock Framework
   #
   # If you prefer to use mocha, flexmock or RR, uncomment the appropriate line:
@@ -25,3 +39,4 @@ RSpec.configure do |config|
   # instead of true.
   config.use_transactional_fixtures = true
 end
+

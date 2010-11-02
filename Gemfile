@@ -26,8 +26,8 @@ gem 'mysql2'
 # put test-only gems in this group so their generators
 # and rake tasks are available in development mode:
 
-#gem 'ZenTest'
-#gem 'redgreen'
+# gem 'redgreen'
+# gem 'ZenTest'
 
 gem 'gravatar_image_tag', '0.1.0'
 

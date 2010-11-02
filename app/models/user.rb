@@ -38,13 +38,19 @@ class User < ActiveRecord::Base
   # CLASS Method defined through "self."authenticate
   def self.authenticate(email, submitted_password)
     user = User.find_by_email(email)
-    if user.nil?
-      return nil
-    elsif user.matching_password?(submitted_password)
-      return user
-    else
-      return nil
-    end
+    (user && user.matching_password?(submitted_password)) ? user : nil
+#    if user.nil?
+#      return nil
+#    elsif user.matching_password?(submitted_password)
+#      return user
+#    else
+#      return nil
+#    end
+  end
+
+  def self.authenticate_with_salt(id, cookie_salt)
+    user = User.find_by_id(id)
+    (user && user.salt == cookie_salt) ? user : nil
   end
 
   def matching_password?(submitted_password)
