@@ -1,4 +1,6 @@
-<p>This is the Home page for this sample app.</p>
+<p>Welcome to the homepage of nothingness.</p>
 
-<%= link_to 'Sign up now!', signup_path, :class => 'signup_button round' %>
+<% if !signed_in? %>
+  <%= link_to 'Sign up now!', signup_path, :class => 'signup_button round' %>
+<% end %>
 

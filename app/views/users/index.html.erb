@@ -1,0 +1,7 @@
+<%= will_paginate %>
+  <ul class="users">
+    <%= render @users %>
+    <!-- Here Rails infers that @users is an array of User objects and automatically iterates through them with 'users/_user.html.erb' partial. -->
+  </ul>
+<%= will_paginate %>
+

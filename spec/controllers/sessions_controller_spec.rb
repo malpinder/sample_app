@@ -76,15 +76,14 @@ describe SessionsController do
   end
 
   describe "DELETE 'destroy'" do
-    it "should sign a user out"
-         # not successful for unknown reasons, check this:  http://getsatisfaction.com/railstutorial/topics/destroying_sessions_listing_9_20
-         # and maybe this: http://github.com/rspec/rspec-core/issues/62
-#    do
-#      test_sign_in(Factory(:user))
-#      delete :destroy
-#      controller.should_not be_signed_in
-#      response.should redirect_to(root_path)
-#    end
+    it "should sign a user out" do
+      @user = Factory(:user)
+      #raise @user.inspect
+      test_sign_in(@user)
+      delete :destroy
+      controller.should_not be_signed_in
+      response.should redirect_to(root_path)
+    end
   end
 
 end

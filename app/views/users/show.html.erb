@@ -8,7 +8,15 @@
     </td>
     <td class="sidebar round">
       <strong>Name</strong> <%= @user.name %><br />
-      <strong>URL</strong>  <%= link_to user_url(@user), @user %>
+      <strong>URL</strong>  <%= link_to user_url(@user), @user %><br />
+      <% if @user.admin? %>
+        <strong> --&gt; Admin &lt;-- </strong><br />
+      <% else %>
+        <br />
+      <% end %>
+      <% if signed_in? %>
+        <strong><%= link_to 'Edit Profile', edit_user_path(current_user) %></strong>
+      <% end %>
     </td>
   </tr>
 </table>

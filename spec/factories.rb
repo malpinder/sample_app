@@ -7,3 +7,9 @@ Factory.define :user do |user|
   user.password_confirmation "foobar23"
 end
 
+# create unique email addresses 'person-1..x@example.com'
+# in the tests call: Factory(:user, :email => Factory.next(:email))
+Factory.sequence :email do |n|
+  "person-#{n}@example.com"
+end
+

@@ -1,5 +1,9 @@
 class UsersController < ApplicationController
 
+  before_filter :authenticate, :only => [:edit, :update, :show, :destroy]
+  before_filter :correct_user, :only => [:edit, :update]
+  before_filter :admin_rights, :only => [:destroy]
+
   def new
     @user = User.new
     @title = 'Sign up'
@@ -23,6 +27,55 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     @title = @user.name
   end
+
+  def edit
+#      @user = User.find(params[:id])     # done by before_filter correct_user
+      @title = "Edit your profile"
+      #render :edit
+  end
+
+  def update
+#      @user = User.find(params[:id])    # done by before_filter correct_user
+      if @user.update_attributes(params[:user])
+        flash[:success] = "Your profile was updated, #{@user.name}!"
+        redirect_to @user
+      else
+        flash.now[:error] = "Your changes could not be saved!"
+        @user.password = ''
+        @user.password_confirmation = ''
+        render :edit
+      end
+  end
+
+  def index
+    #@users = User.all
+    @users = User.paginate(:page => params[:page])
+    @title = "All users"
+    #render :index
+  end
+
+  def destroy    # only for admins
+    @user = User.find(params[:id])
+    @user.destroy
+    flash[:success] = "User deleted."
+    redirect_to users_path
+  end
+
+
+  private
+
+    def authenticate
+      deny_access unless signed_in?
+    end
+
+    def correct_user
+      @user = User.find(params[:id])
+      redirect_to(root_path) unless current_user == @user && signed_in?      # && signed_in? optional, wegen before_filer authenticate
+    end
+
+    def admin_rights
+      redirect_to(root_path) unless current_user.admin?
+    end
 
 end
 
