@@ -335,12 +335,23 @@ describe UsersController do
         delete :destroy, :id => @user
         response.should redirect_to(root_path)
       end
+
+      it "should not display delete links on users index" do
+        test_sign_in(@user)
+        get :index
+        response.should_not have_selector("a", :'data-method' => "delete", :content => "delete user")
+      end
     end
 
     describe "as an admin user" do
       before(:each) do
         admin = Factory(:user, :email => "admin@example.com", :admin => true)
         test_sign_in(admin)
+      end
+
+      it "should display delete links on users index" do
+        get :index
+        response.should have_selector("a", :'data-method' => "delete", :content => "delete user")
       end
 
       it "should destroy the user" do

@@ -1,13 +1,16 @@
 # == Schema Information
-# Schema version: 20101030202716
+# Schema version: 20101106124457
 #
 # Table name: users
 #
-#  id         :integer(4)      not null, primary key
-#  name       :string(255)
-#  email      :string(255)
-#  created_at :datetime
-#  updated_at :datetime
+#  id                 :integer(4)      not null, primary key
+#  name               :string(255)
+#  email              :string(255)
+#  created_at         :datetime
+#  updated_at         :datetime
+#  encrypted_password :string(255)
+#  salt               :string(255)
+#  admin              :boolean(1)
 #
 
 require 'digest'    # for password encryption via SHA2
@@ -22,10 +25,10 @@ class User < ActiveRecord::Base
                     :length   => { :within => 3..30 }
   validates :email,   :presence   => true,
                       :format     => { :with => email_regex },
-                      :uniqueness => { :case_sensitive => false }   # uniqueness => true , and ignoring the case
-  validates :password,  :presence     => true,
-                        :length       => { :within => 6..64 },
-                        :confirmation => true   #  ,
+                      :uniqueness => { :case_sensitive => false }     # uniqueness => true , and ignoring the case
+  validates :password,  :presence     => (true || current_user.admin? && current_user != user),
+                        #:length       => { :within => 6..64 },
+                        :confirmation => (true || current_user.admin? && current_user != user)
 
   before_save :encrypt_password
 

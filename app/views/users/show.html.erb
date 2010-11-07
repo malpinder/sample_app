@@ -14,7 +14,7 @@
       <% else %>
         <br />
       <% end %>
-      <% if signed_in? %>
+      <% if signed_in? && current_user == @user %>
         <strong><%= link_to 'Edit Profile', edit_user_path(current_user) %></strong>
       <% end %>
     </td>

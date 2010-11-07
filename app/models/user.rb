@@ -28,7 +28,7 @@ class User < ActiveRecord::Base
                       :uniqueness => { :case_sensitive => false }     # uniqueness => true , and ignoring the case
   validates :password,  :presence     => true,
                         :length       => { :within => 6..64 },
-                        :confirmation => true   #  ,
+                        :confirmation => true
 
   before_save :encrypt_password
 

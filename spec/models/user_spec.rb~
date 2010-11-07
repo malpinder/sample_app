@@ -131,7 +131,7 @@ describe User do
   end
 
 # ADMIN rights
-  describe "admin attribute" do
+  describe "Admin user" do
     before(:each) do
       @user = User.create!(@attr)
     end
@@ -140,7 +140,23 @@ describe User do
       @user.should respond_to(:admin)
     end
 
-    it "should grant admin rights to an admin"
+    it "should not be an admin by default" do
+      @user.should_not be_admin
+    end
+
+    it "should be convertible to an admin" do
+      @user.toggle!(:admin)
+      @user.should be_admin
+    end
+
+    it "should see delete links on users index" do
+      @user.toggle!(:admin)
+      @user.should be_admin
+      get :index
+      response.should have_selector("a", :data-method => "delete")
+    end
+
+
   end
 end
 

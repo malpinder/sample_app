@@ -5,21 +5,29 @@ class UsersController < ApplicationController
   before_filter :admin_rights, :only => [:destroy]
 
   def new
-    @user = User.new
-    @title = 'Sign up'
+    if !signed_in?
+      @user = User.new
+      @title = 'Sign up'
+    else
+      redirect_to(root_path)
+    end
   end
 
   def create
-    @user = User.new(params[:user])
-    if @user.save
-      flash[:success] = "Welcome, #{@user.name}!"
-      sign_in @user
-      redirect_to @user
+    if !signed_in?
+      @user = User.new(params[:user])
+      if @user.save
+        flash[:success] = "Welcome, #{@user.name}!"
+        sign_in @user
+        redirect_to @user
+      else
+        @title = "Please try to Sign up again"
+        @user.password = ''
+        @user.password_confirmation = ''
+        render :new
+      end
     else
-      @title = "Please try to Sign up again"
-      @user.password = ''
-      @user.password_confirmation = ''
-      render :new
+      redirect_to(root_path)
     end
   end
 
@@ -29,13 +37,10 @@ class UsersController < ApplicationController
   end
 
   def edit
-#      @user = User.find(params[:id])     # done by before_filter correct_user
-      @title = "Edit your profile"
-      #render :edit
+    @title = "Edit your profile"
   end
 
   def update
-#      @user = User.find(params[:id])    # done by before_filter correct_user
       if @user.update_attributes(params[:user])
         flash[:success] = "Your profile was updated, #{@user.name}!"
         redirect_to @user
@@ -48,10 +53,8 @@ class UsersController < ApplicationController
   end
 
   def index
-    #@users = User.all
     @users = User.paginate(:page => params[:page])
     @title = "All users"
-    #render :index
   end
 
   def destroy    # only for admins
@@ -70,7 +73,7 @@ class UsersController < ApplicationController
 
     def correct_user
       @user = User.find(params[:id])
-      redirect_to(root_path) unless current_user == @user && signed_in?      # && signed_in? optional, wegen before_filer authenticate
+      redirect_to(root_path) unless current_user == @user # || current_user.admin?      # && signed_in? optional, wegen before_filer authenticate
     end
 
     def admin_rights

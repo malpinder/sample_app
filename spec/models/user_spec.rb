@@ -131,7 +131,7 @@ describe User do
   end
 
 # ADMIN rights
-  describe "admin attribute" do
+  describe "Admin user" do
     before(:each) do
       @user = User.create!(@attr)
     end

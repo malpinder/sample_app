@@ -325,8 +325,7 @@ describe UsersController do
     describe "as a non-signed-in user" do
       it "should deny access" do
         delete :destroy, :id => @user
-        response.should redirect_to(root_path)
-        #response.should redirect_to(signin_path)
+        response.should redirect_to(signin_path)
       end
     end
 
@@ -336,12 +335,23 @@ describe UsersController do
         delete :destroy, :id => @user
         response.should redirect_to(root_path)
       end
+
+      it "should not display delete links on users index" do
+        test_sign_in(@user)
+        get :index
+        response.should_not have_selector("a", :'data-method' => "delete")
+      end
     end
 
     describe "as an admin user" do
       before(:each) do
         admin = Factory(:user, :email => "admin@example.com", :admin => true)
         test_sign_in(admin)
+      end
+
+      it "should display delete links on users index" do
+        get :index
+        response.should have_selector("a", :'data-method' => "delete")
       end
 
       it "should destroy the user" do
