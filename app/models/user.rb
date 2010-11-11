@@ -13,19 +13,29 @@
 #  admin              :boolean(1)
 #
 
+
+class EmailValidator < ActiveModel::EachValidator
+  def validate_each(record, attribute, value)
+    record.errors[attribute] << (options[:message] || "is not a valid email") unless
+      #value =~ /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i
+      value =~ /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
+  end
+end
+
 require 'digest'    # for password encryption via SHA2
 
 class User < ActiveRecord::Base
   attr_accessor :password                   # virtual attribute - that means: no database column
   attr_accessible :name, :email, :password, :password_confirmation
+  has_many :microposts, :dependent => :destroy
+  default_scope :order => 'users.name ASC'
 
-  email_regex = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
-
-  validates :name,  :presence => true,
-                    :length   => { :within => 3..30 }
-  validates :email,   :presence   => true,
-                      :format     => { :with => email_regex },
-                      :uniqueness => { :case_sensitive => false }     # uniqueness => true , and ignoring the case
+  validates :name,      :presence => true,
+                        :length   => { :within => 3..30 }
+  validates :email,     :presence   => true,
+                        :email      => true,      # self written Validator in users_helper.rb
+                        :uniqueness => { :case_sensitive => false }     # uniqueness => true , and ignoring the case
+                        #:format    => { :with => email_regex }
   validates :password,  :presence     => true,
                         :length       => { :within => 6..64 },
                         :confirmation => true
@@ -45,6 +55,11 @@ class User < ActiveRecord::Base
 
   def self.per_page               # class method, used by will_paginate
     10
+  end
+
+  def feed
+    microposts
+    # Micropost.where("user_id =?", id)
   end
 
   def matching_password?(submitted_password)

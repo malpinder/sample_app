@@ -13,3 +13,10 @@ Factory.sequence :email do |n|
   "person-#{n}@example.com"
 end
 
+# This  micropost.association :user  is needed to create an micropost with the right user_id
+# it depends on the belongs_to / has_many associations of the models (?)
+Factory.define :micropost do |micropost|
+  micropost.content     "Some foo bar text"
+  micropost.association :user
+end
+
