@@ -1,0 +1,28 @@
+%table.profile(summary="Profile information")
+  %tr
+    %td.main
+      %h2
+        = gravatar_for @user, :size => 60
+        = @user.email
+      - unless @user.microposts.empty?
+        %table.microposts(summary="User microposts")
+          = render @microposts
+        = will_paginate @microposts
+
+    %td.sidebar.round
+      %strong Name
+      = @user.name
+      %br
+      %strong URL
+      = link_to user_url(@user), @user
+      %br
+      %strong Microposts
+      = @user.microposts.count
+      %br
+      - if @user.admin?
+        %strong --&gt; Admin &lt;--
+      %br
+
+      - if signed_in? && current_user == @user
+        %strong= link_to 'Edit Profile', edit_user_path(current_user)
+

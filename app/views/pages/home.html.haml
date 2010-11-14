@@ -1,0 +1,13 @@
+- if signed_in?
+  %table.front(summary="For signed-in users")
+    %tr
+      %td.main
+        %h1.micropost What's up?
+        = render 'shared/micropost_form'
+        = render 'shared/feed'
+      %td.sidebar.round
+        = render 'shared/user_info'
+- else
+  %p Welcome to the homepage of nothingness.
+  = link_to 'Sign up now!', signup_path, :class => 'signup_button round'
+
